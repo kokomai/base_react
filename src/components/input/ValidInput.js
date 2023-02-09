@@ -11,7 +11,7 @@ const ValidInput = ({value, setValue, valid, msg, type}) => {
     useEffect(()=>{
         let e = {
             'target' : {
-                'value' : value
+                'value' : value 
             }
         };
         validCheck(e);
