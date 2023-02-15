@@ -262,10 +262,13 @@ export default function useReq() {
 			if(isSuccess) {
 				successF(data);
 			} else {
-				if(typeof data === 'object') {
-					sendError(url, data.message);
-				} else {
-					sendError(url, data);
+				if(!url.includes('login')) {
+					// don't recording error when login or login timeout
+					if(typeof data === 'object') {
+						sendError(url, data.message);
+					} else {
+						sendError(url, data);
+					}
 				}
 
 				errorF(data);
@@ -288,9 +291,11 @@ export default function useReq() {
 
 	const sendError = (errorLocation, errorMsg) => {
 		// sending error
-
-		console.log("errorLocaton : " + errorLocation);
-		console.log("errorMsg : " + errorMsg);
+		if(!window.location.host.includes('localhost')) {
+		} else {
+			console.log("errorLocaton : " + errorLocation);
+			console.log("errorMsg : " + errorMsg);
+		}
 	}
 
 	return {
