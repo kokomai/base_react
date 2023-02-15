@@ -4,51 +4,71 @@
  * All copyright reserved by https=//github.com/kokomai
  */
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { selectUser, setA, setR } from "../features/login/userSlice";
 import { show, hide } from "../fragments/loading/loadingSlice";
 
 export default function useReq() {
 	const dispatch = useDispatch();
+	const user = useSelector(selectUser);
 
-    // refresh token 가져오기(sessionStorage)
-    const getRToken = function() {
-        return sessionStorage.getItem("rToken");
-    }
-    // refresh token 셋팅(sessionStorage)
-    const setRToken = function(tokn) {
-        sessionStorage.setItem("rToken", tokn);
-    }
-    // refresh token 삭제(sessionStorage)
-    const delRToken = function() {
-        sessionStorage.removeItem("rToken");
-    }
-    // access token 가져오기(sessionStorage)
+    // access token 가져오기
     const getAToken = function() {
-        return sessionStorage.getItem("aToken");
+		// using sessionStorage
+        // return sessionStorage.getItem("aToken");
+
+		// usign redux
+		return user.aToken;
     }
-    // access token 셋팅(sessionStorage)
-    const setAToken = function(tokn) {
-        sessionStorage.setItem("aToken", tokn);
+    // access token 셋팅
+    const setAToken = function(token) {
+		// using sessionStorage
+        // sessionStorage.setItem("aToken", token);
+
+		// usign redux
+		dispatch(setA(token));
     }
-    // access token 삭제(sessionStorage)
+    // access token 삭제
     const delAToken = function() {
-        sessionStorage.removeItem("aToken");
+		// using sessionStorage
+        // sessionStorage.removeItem("aToken");
+		dispatch(setA(''));
     }
     // access token 헤더값 설정
-    const aTokenHeader = function(xhr) {
-        let aToken = getAToken();
-        xhr.setRequestHeader("Content-type","application/json");
-        xhr.setRequestHeader("Authorization","JWT " + aToken);
+    // const aTokenHeader = function(xhr) {
+    //     let aToken = getAToken();
+    //     xhr.setRequestHeader("Content-type","application/json");
+    //     xhr.setRequestHeader("Authorization","JWT " + aToken);
+    // }
+
+    // refresh token 가져오기
+    const getRToken = function() {
+		// using sessionStorage
+        // return sessionStorage.getItem("aToken");
+
+		// usign redux
+		return user.rToken;
     }
-    // access token 만료시 refresh token 헤더값 설정
-    const rTokenHeader = function(xhr) {
-        let rToken = getRToken();
-        let aToken = getAToken();
-		
-        xhr.setRequestHeader("Content-type","application/json");
-        xhr.setRequestHeader("X-AUTH-RTOKEN", rToken);
-        xhr.setRequestHeader("X-AUTH-ATOKEN", aToken);
+    // refresh token 셋팅
+    const setRToken = function(token) {
+		// using sessionStorage
+        // sessionStorage.setItem("aToken", token);
+
+		// usign redux
+		dispatch(setR(token));
     }
+    // refresh token 삭제
+    const delRToken = function() {
+		// using sessionStorage
+        // sessionStorage.removeItem("aToken");
+		dispatch(setR(''));
+    }
+    // refresh token 헤더값 설정
+    // const rTokenHeader = function(xhr) {
+    //     let rToken = getRToken();
+    //     xhr.setRequestHeader("Content-type","application/json");
+    //     xhr.setRequestHeader("Authorization","JWT " + rToken);
+    // }
     // get request
 	/*
 		options = {
@@ -82,15 +102,21 @@ export default function useReq() {
 				params = options.params
 			}
 			if(options.success) {
-				successF = options.success
+				successF = function(data) {
+					try{
+						options.success(data);
+					} catch(e) {
+						sendError(url, e.message);
+					}
+				}
 			}
 			if(options.error) {
 				errorF = options.error
 			}
-			if(options.noLoading != undefined || options.noLoading != null) {
+			if(options.noLoading !== undefined || options.noLoading !== null) {
 				isLoading = !options.noLoading
 			}
-			if(options.keepLoading != undefined || options.keepLoading != null) {
+			if(options.keepLoading !== undefined || options.keepLoading !== null) {
 				isHideLoading = !options.keepLoading
 			}
 		}
@@ -117,8 +143,8 @@ export default function useReq() {
 				method: 'GET',
 				headers: {
 					"Content-type" : "application/json",
-					"X-AUTH-RTOKEN" : getRToken(),
-					"X-AUTH-ATOKEN" : getAToken()
+					"X-AUTH-ATOKEN" : getAToken(),
+					"X-AUTH-RTOKEN" : getRToken()
 				},
 			}
 		).then((res) => {
@@ -127,7 +153,11 @@ export default function useReq() {
 				isSuccess = false;
 			}
 			
-			return res.json();
+			if(res.headers.get("content-type") === 'application/json') {
+				return res.json();
+			} else  {
+				return res.text();
+			}
 		}).then(data => {
 			if(isSuccess) {
 				successF(data);
@@ -181,15 +211,21 @@ export default function useReq() {
 				params = options.params
 			}
 			if(options.success) {
-				successF = options.success
+				successF = function(data) {
+					try{
+						options.success(data);
+					} catch(e) {
+						sendError(url, e.message);
+					}
+				}
 			}
 			if(options.error) {
 				errorF = options.error
 			}
-			if(options.noLoading != undefined || options.noLoading != null) {
+			if(options.noLoading !== undefined || options.noLoading !== null) {
 				isLoading = !options.noLoading
 			}
-			if(options.keepLoading != undefined || options.keepLoading != null) {
+			if(options.keepLoading !== undefined || options.keepLoading !== null) {
 				isHideLoading = !options.keepLoading
 			}
 		}
@@ -206,8 +242,8 @@ export default function useReq() {
 				method: 'POST',
 				headers: {
 					"Content-type" : "application/json",
-					"X-AUTH-RTOKEN" : getRToken(),
-					"X-AUTH-ATOKEN" : getAToken()
+					"X-AUTH-ATOKEN" : getAToken(),
+					"X-AUTH-RTOKEN" : getRToken()
 				},
 				body: JSON.stringify(params)
 			}
@@ -217,11 +253,21 @@ export default function useReq() {
 				isSuccess = false;
 			}
 			
-			return res.json();
+			if(res.headers.get("content-type") === 'application/json') {
+				return res.json();
+			} else  {
+				return res.text();
+			}
 		}).then(data => {
 			if(isSuccess) {
 				successF(data);
 			} else {
+				if(typeof data === 'object') {
+					sendError(url, data.message);
+				} else {
+					sendError(url, data);
+				}
+
 				errorF(data);
 			}
 				
@@ -229,7 +275,9 @@ export default function useReq() {
 				dispatch(hide());
 			}
 		}).catch(err =>{
-			console.error(err);
+			// console.error(err);
+			sendError(url, err);
+
 			errorF(err);
 
 			if(isHideLoading) {
@@ -238,5 +286,17 @@ export default function useReq() {
 		});
     }
 
-	return {get:get, post:post}
+	const sendError = (errorLocation, errorMsg) => {
+		// sending error
+
+		console.log("errorLocaton : " + errorLocation);
+		console.log("errorMsg : " + errorMsg);
+	}
+
+	return {
+		get:get, post:post,
+		getAToken:getAToken, setAToken:setAToken, delAToken:delAToken, 
+		getRToken:getRToken, setRToken:setRToken, delRToken:delRToken,
+		sendError:sendError
+	}
 }

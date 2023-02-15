@@ -1,33 +1,44 @@
-import React from 'react';
-import Header from './Header';
-import Footer from './Footer';
-import { Navigate, useOutlet } from 'react-router';
-import { setId, setName, selectUser } from '../features/login/userSlice';
-import { useSelector } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useOutlet } from 'react-router';
+import useReq from '../app/request';
+import { COMM } from '../app/common';
+
 
 function NeedAuthPages() {
-    const user = useSelector(selectUser);
     const outlet = useOutlet();
-
-    let isLogined = false;
     
-    if(Object.keys(user).length != 0 && user.id && user.pw) {
-        isLogined = true;
-    }
+    const req = useReq();
+    const [isLogined, setIsLogined] = useState(false);
+    const nav = useNavigate();
+
+    const aToken = req.getAToken();
+
+    useEffect(() => {
+        if(COMM.isNotEmpty(aToken)) {
+            req.post({
+                url: '/api/login/checkLogin',
+                success: function(data) {
+                    setIsLogined(true);
+                },
+                error: function() {
+                    setIsLogined(false);
+                    nav("/login")
+                }
+            })
+        } else {
+            setIsLogined(false);
+            nav("/login")
+        }
+    }, [])
 
     return (
         isLogined
         ?
         <>
-            <Header></Header>
-            <div className="body someDesignedClass">
-                {outlet}
-            </div>
-            <Footer></Footer>
+            {outlet}
         </>
         : 
         <>
-            <Navigate to="/login" replace></Navigate>
         </>
     );
 }
