@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 
-export default function Mypage() {
+
+
+export default function About() {
  
 
   return (
     <div>
-     My PAGE....
+     About......
     </div>
   );
 }

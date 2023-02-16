@@ -22,7 +22,8 @@ function NeedAuthPages() {
                 },
                 error: function() {
                     setIsLogined(false);
-                    nav("/login")
+                    sessionStorage.setItem("afterLogin", outlet.props.children.props.match.pathname);
+                    nav("/login");
                 }
             })
         } else {

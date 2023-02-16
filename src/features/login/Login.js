@@ -16,7 +16,7 @@ export function Login() {
   const [id, setId] = useState('');
   const [pw, setPw] = useState('');
   const dispatch = useDispatch();
-
+  
   let TryLogin = () => {
 
     if(id === '' || pw === '') {
@@ -32,7 +32,13 @@ export function Login() {
           req.setRToken(data.rtoken);
           req.setAToken(data.atoken);
           dispatch(setName(data.username))
-          nav("/");
+          let moveTo = sessionStorage.getItem('afterLogin');
+
+          if(moveTo && moveTo !== "") {
+            nav(moveTo);
+          } else {
+            nav("/");
+          }
         },
         error: function(err) {
           if(err.httpStatus === 403) {
