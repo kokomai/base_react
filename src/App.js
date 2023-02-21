@@ -11,6 +11,7 @@ import { BrowserRouter } from 'react-router-dom';
 import LoginLayout from './fragments/layout/LoginLayout';
 import ErrorBoundary from './app/errorBoundary';
 import About from './features/about/About';
+import { Sample } from './features/sample/Sample';
 
 /**
  * 
