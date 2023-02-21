@@ -61,7 +61,7 @@ function App() {
           </Route>
           
           <Route path="/" element={<Main/>}></Route>
-          
+          <Route path="/sample" element={<Sample/>}></Route>
           <Route path="/about" element={<About/>}></Route>
         </Route>
         <Route element={<LoginLayout/>}>
