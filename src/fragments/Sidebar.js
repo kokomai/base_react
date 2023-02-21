@@ -10,10 +10,12 @@ import {
     ListItemIcon,
     ListItemText,
     Toolbar,
-
   } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { Assignment, AssignmentInd, ChevronRight as ChevronRightIcon,
+import { Assignment, 
+    AssignmentInd, 
+    ChevronRight as ChevronRightIcon,
+    Quiz as QuizIcon,
     Home,
     Logout
  } from '@mui/icons-material';
@@ -23,6 +25,7 @@ function Sidebar({open, toggleDrawer}) {
             {link: '/', text : '홈', icon: <Home></Home>},
             {link: '/about', text : 'about', icon: <Assignment></Assignment> },
             {link: '/mypage', text : '마이페이지', icon: <AssignmentInd></AssignmentInd>},
+            {link: '/sample', text : '샘플', icon: <QuizIcon></QuizIcon>},
         ]
         
         const nav = useNavigate();

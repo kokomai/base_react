@@ -1,10 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import {
-  setId,
-  setName
-} from './userSlice';
-import styles from './Login.module.css';
+
 import useReq from '../../app/request';
 import ValidInput from '../../components/input/ValidInput';
 import { COMM } from '../../app/common';
@@ -19,19 +15,18 @@ export function Sample() {
   const req = useReq();
 
   // ※ 동기화 호출이 필요 한 경우 async를 함수 앞에 선언해줍니다.
-  // 다른 예 ) let TryLogin = async function() {}
+  // 다른 예 ) const example = async function() { await req.post(~~~)}
   // ※ If you wanna call API function as synchrously, define 'async' at front of function
   // another example ) let TryLogin = async function() {}
   const onclick = async () => {
 
     await req.post(
       {
-        url: '/api/getError',
+        url: '/api/user/getError',
         params: {'id' : 'test', 'pw' : 'pw1234'},
         error: function(err) {
           // 응답 실패시
-          // when response returned error
-          alert(JSON.stringify(err) + 'ttt');
+          alert("에러: " + JSON.stringify(err));
         },
         // noLoading: true, // 설정시 로딩 안보여주기 // if you define this, it should not show the loading.
         keepLoading: true // 설정시 api 값을 받아오더라도 계속 로딩 // if you define this, loading will keep showing even the api call is ended.
@@ -40,13 +35,13 @@ export function Sample() {
 
     await req.post(
       {
-        url: '/api/getUser',
+        url: '/api/user/getUser',
         params: {'id' : 'test', 'pw' : 'pw1234'},
         success: function(res) {
           alert(JSON.stringify(res));
         },
         error: function(err) {
-          alert(JSON.stringify(err) + 'tttttt');
+          alert(JSON.stringify(err));
         },
         keepLoading: true
       }
@@ -54,15 +49,14 @@ export function Sample() {
 
     await req.get(
       {
-        url: '/api/callGet',
+        url: '/api/user/callGet',
         params: {'id' : 'get방식아이디', 'pw' : 'get방식 pw'},
         success: function(res) {
-        
           alert(JSON.stringify(res));
         },
         error: function(err) {
           
-          alert(JSON.stringify(err) + 'tttttt');
+          alert(JSON.stringify(err));
         },
         keepLoading: true
       }
@@ -70,7 +64,7 @@ export function Sample() {
 
     req.post(
       {
-        url: '/api/getUser',
+        url: '/api/user/getUser',
         params: {'id' : 'async ID1', 'pw' : 'async pw2'},
         success: function(res) {
           console.log(res);
@@ -83,7 +77,7 @@ export function Sample() {
 
     req.post(
       {
-        url: '/api/getUser',
+        url: '/api/user/getUser',
         params: {'id' : 'async ID2', 'pw' : 'async pw2'},
         success: function(res) {
           console.log(res);
@@ -93,8 +87,6 @@ export function Sample() {
         },
       }
     )
-
-    
   }
 
   return (

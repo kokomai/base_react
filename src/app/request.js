@@ -10,29 +10,29 @@ import { show, hide } from "../fragments/loading/loadingSlice";
 
 export default function useReq() {
 	const dispatch = useDispatch();
-	const user = useSelector(selectUser);
+	// const user = useSelector(selectUser);
 
     // access token 가져오기
     const getAToken = function() {
 		// using sessionStorage
-        // return sessionStorage.getItem("aToken");
+        return sessionStorage.getItem("aToken");
 
 		// usign redux
-		return user.aToken;
+		// return user.aToken;
     }
     // access token 셋팅
     const setAToken = function(token) {
 		// using sessionStorage
-        // sessionStorage.setItem("aToken", token);
+        sessionStorage.setItem("aToken", token);
 
 		// usign redux
-		dispatch(setA(token));
+		// dispatch(setA(token));
     }
     // access token 삭제
     const delAToken = function() {
 		// using sessionStorage
-        // sessionStorage.removeItem("aToken");
-		dispatch(setA(''));
+        sessionStorage.removeItem("aToken");
+		// dispatch(setA(''));
     }
     // access token 헤더값 설정
     // const aTokenHeader = function(xhr) {
@@ -44,24 +44,24 @@ export default function useReq() {
     // refresh token 가져오기
     const getRToken = function() {
 		// using sessionStorage
-        // return sessionStorage.getItem("aToken");
+        return sessionStorage.getItem("aToken");
 
 		// usign redux
-		return user.rToken;
+		// return user.rToken;
     }
     // refresh token 셋팅
     const setRToken = function(token) {
 		// using sessionStorage
-        // sessionStorage.setItem("aToken", token);
+        sessionStorage.setItem("aToken", token);
 
 		// usign redux
-		dispatch(setR(token));
+		// dispatch(setR(token));
     }
     // refresh token 삭제
     const delRToken = function() {
 		// using sessionStorage
-        // sessionStorage.removeItem("aToken");
-		dispatch(setR(''));
+        sessionStorage.removeItem("aToken");
+		// dispatch(setR(''));
     }
     // refresh token 헤더값 설정
     // const rTokenHeader = function(xhr) {
