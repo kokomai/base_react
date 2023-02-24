@@ -41,7 +41,6 @@ export default function useReq() {
 		const sessionInterval = setInterval(()=> {
 			let nowCount = getSessionTime();
 			if(nowCount <= alertTime) {
-				console.log(nowCount);
 				if(nowCount <= 0) {
 					// 완전 만료시 로그아웃
 					dispatch(hideTimeoutAlert());
