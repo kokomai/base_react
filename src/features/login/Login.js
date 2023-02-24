@@ -32,9 +32,13 @@ export function Login() {
           req.setRToken(data.rtoken);
           req.setAToken(data.atoken);
           dispatch(setName(data.username))
+
           let moveTo = sessionStorage.getItem('afterLogin');
 
+          req.setSessionCheck();
+
           if(moveTo && moveTo !== "") {
+            console.log(moveTo);
             nav(moveTo);
           } else {
             nav("/");

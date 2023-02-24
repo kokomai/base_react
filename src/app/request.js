@@ -1,16 +1,64 @@
 /**
  * fetch + jwt 토큰 관련 함수
- * @author : coding-orca
+ * * @author : coding-orca
  * All copyright reserved by https=//github.com/kokomai
  */
 
-import { useDispatch, useSelector } from "react-redux";
-import { selectUser, setA, setR } from "../features/login/userSlice";
+import { useDispatch } from "react-redux";
+import { setId, setName } from "../features/login/userSlice";
 import { show, hide } from "../fragments/loading/loadingSlice";
+import { hideTimeoutAlert, showTimeoutAlert } from "../fragments/timeoutAlert/timeoutSlice";
 
 export default function useReq() {
 	const dispatch = useDispatch();
+	
 	// const user = useSelector(selectUser);
+
+	/**
+	 *  세션시간.. 프로젝트별로 설정해 주어야 함.
+	 *  동작이 없을 시 로그아웃 안내를 위해..
+	 */
+	const sessionTime = 1000 * 60 * 30; // 일단 30분
+	// const sessionTime = 1000 * 60 * 10; // 일단 10분
+
+	/**
+	 *  세션 시간이 만료됨을 알려주는 시간
+	 */
+	const alertTime = 1000 * 60 *  1 // 일단 1분
+	// const alertTime = 1000 * 60 * 1 // 일단 1분
+	
+	// 세션 / 토큰 유효시간 가져오기
+	const getSessionTime = function() {
+		return parseInt(sessionStorage.getItem("f-sessionTime"));
+	}
+
+	// 세션 / 토큰 유효시간 설정하기
+	const setSessionTime = function(time = sessionTime) {
+		sessionStorage.setItem("f-sessionTime", time);
+	}
+
+	const setSessionCheck = function() {
+		const sessionInterval = setInterval(()=> {
+			let nowCount = getSessionTime();
+			if(nowCount <= alertTime) {
+				console.log(nowCount);
+				if(nowCount <= 0) {
+					// 완전 만료시 로그아웃
+					dispatch(hideTimeoutAlert());
+					clearInterval(sessionInterval);
+					window.location.href = '/login';
+				} else {
+					// toggle 형식으로 타임아웃 안내 보여주기.
+					// 해당 안내 컴포넌트는 App.js에 정의
+					dispatch(showTimeoutAlert());
+				}
+
+				setSessionTime(nowCount - 1000);
+			} else {
+				setSessionTime(nowCount - 1000);
+			}
+		}, 1000)
+	}
 
     // access token 가져오기
     const getAToken = function() {
@@ -160,20 +208,35 @@ export default function useReq() {
 			}
 		}).then(data => {
 			if(isSuccess) {
+				// 세션 시간 초기화
+				setSessionTime();
 				successF(data);
 			} else {
+				if(!url.includes('login')) {
+					// don't recording error when login or login timeout
+					if(typeof data === 'object') {
+						sendError(url, data.message);
+					} else {
+						sendError(url, data);
+					}
+				}
 				errorF(data);
 			}
 				
 			if(isHideLoading) {
-				dispatch(hide());
+				setTimeout(()=> {
+					dispatch(hide());
+				}, 100)
 			}
 		}).catch(err =>{
-			console.error(err);
+			// console.error(err);
+			sendError(url, err);
 			errorF(err);
 
 			if(isHideLoading) {
-				dispatch(hide());
+				setTimeout(()=> {
+					dispatch(hide());
+				}, 100)
 			}
 		});
     }
@@ -260,6 +323,8 @@ export default function useReq() {
 			}
 		}).then(data => {
 			if(isSuccess) {
+				// 세션 시간 초기화
+				setSessionTime();
 				successF(data);
 			} else {
 				if(!url.includes('login')) {
@@ -275,7 +340,9 @@ export default function useReq() {
 			}
 				
 			if(isHideLoading) {
-				dispatch(hide());
+				setTimeout(()=> {
+					dispatch(hide());
+				}, 100)
 			}
 		}).catch(err =>{
 			// console.error(err);
@@ -284,7 +351,9 @@ export default function useReq() {
 			errorF(err);
 
 			if(isHideLoading) {
-				dispatch(hide());
+				setTimeout(()=> {
+					dispatch(hide());
+				}, 100)
 			}
 		});
     }
@@ -298,10 +367,22 @@ export default function useReq() {
 		}
 	}
 
+	const logout = () => {
+		delAToken();
+		delRToken();
+
+		dispatch(setId(''));
+		dispatch(setName(''));
+		window.location.href = '/login';
+	}
+
 	return {
 		get:get, post:post,
 		getAToken:getAToken, setAToken:setAToken, delAToken:delAToken, 
 		getRToken:getRToken, setRToken:setRToken, delRToken:delRToken,
-		sendError:sendError
+		sendError:sendError,
+		setSessionCheck: setSessionCheck, getSessionTime:getSessionTime, 
+		setSessionTime:setSessionTime, sessionTime:sessionTime, alertTime:alertTime,
+		logout:logout
 	}
 }

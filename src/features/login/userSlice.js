@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  value: { id: '', name: '', aToken: '', rToken: ''},
+  value: { id: '', name: ''},
   status: 'idle',
 };
 
@@ -20,20 +20,10 @@ export const userSlice = createSlice({
       temp.name = action.payload;
       state.value = temp;
     },
-    setA: (state, action) => {
-      let temp = {...state.value};
-      temp.aToken = action.payload;
-      state.value = temp;
-    },
-    setR: (state, action) => {
-      let temp = {...state.value};
-      temp.rToken = action.payload;
-      state.value = temp;
-    }
   },
 });
 
-export const { setId, setName, setA, setR } = userSlice.actions;
+export const { setId, setName } = userSlice.actions;
 
 export const selectUser = (state) => state.user.value;
 
