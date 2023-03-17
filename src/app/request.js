@@ -91,7 +91,7 @@ export default function useReq() {
     // refresh token 가져오기
     const getRToken = function() {
 		// using sessionStorage
-        return sessionStorage.getItem("aToken");
+        return sessionStorage.getItem("rToken");
 
 		// usign redux
 		// return user.rToken;
@@ -99,7 +99,7 @@ export default function useReq() {
     // refresh token 셋팅
     const setRToken = function(token) {
 		// using sessionStorage
-        sessionStorage.setItem("aToken", token);
+        sessionStorage.setItem("rToken", token);
 
 		// usign redux
 		// dispatch(setR(token));
@@ -107,7 +107,7 @@ export default function useReq() {
     // refresh token 삭제
     const delRToken = function() {
 		// using sessionStorage
-        sessionStorage.removeItem("aToken");
+        sessionStorage.removeItem("rToken");
 		// dispatch(setR(''));
     }
     // refresh token 헤더값 설정
