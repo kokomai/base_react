@@ -1,7 +1,5 @@
 /**
  * 자주쓰는 공통함수
- * @author : coding-orca
- * All copyright reserved by https://github.com/kokomai
  */
 
 const COMM = {

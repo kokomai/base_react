@@ -1,7 +1,5 @@
 /**
  * fetch + jwt 토큰 관련 함수
- * * @author : coding-orca
- * All copyright reserved by https=//github.com/kokomai
  */
 
 import { useDispatch } from "react-redux";
@@ -27,7 +25,7 @@ export default function useReq() {
 	const alertTime = 1000 * 60 *  1 // 일단 1분
 	// const alertTime = 1000 * 60 * 1 // 일단 1분
 	
-	// 세션 / 토큰 유효시간 가져오기
+	/// 세션 / 토큰 유효시간 가져오기
 	const getSessionTime = function() {
 		return parseInt(sessionStorage.getItem("f-sessionTime"));
 	}
@@ -117,17 +115,17 @@ export default function useReq() {
     //     xhr.setRequestHeader("Authorization","JWT " + rToken);
     // }
     // get request
-	/*
-		options = {
-			url = 요청 url
-			params = 전달할 파라미터 ({})
-			success = 성공시 호출할 콜백 함수
-			error = 에러시 호출할 콜백 함수
-			noLoading = true
-				-> true 설정시, Loading 없이 호출
-			keepLoading = true 
-				-> 여러번 비동기로 호출 시 앞서 호출한 요청이 Loading을 가리지 않게 하기 
-		}
+	/**
+	**	options = {
+	*		url = 요청 url
+	*		params = 전달할 파라미터 ({})
+	*		success = 성공시 호출할 콜백 함수
+	*		error = 에러시 호출할 콜백 함수
+	*		noLoading = true
+	*			-> true 설정시, Loading 없이 호출
+	*		keepLoading = true 
+	*			-> 여러번 비동기로 호출 시 앞서 호출한 요청이 Loading을 가리지 않게 하기 
+	*	}
 	*/
     const get = function(options) {
 		let url = "";
@@ -240,18 +238,18 @@ export default function useReq() {
 		});
     }
 
-	// post request
-	/*
-		options = {
-			url = 요청 url
-			params = 전달할 파라미터 ({})
-			success = 성공시 호출할 콜백 함수
-			error = 에러시 호출할 콜백 함수
-			noLoading = true
-				-> true 설정시, Loading 없이 호출
-			keepLoading = true 
-				-> 여러번 비동기로 호출 시 앞서 호출한 요청이 Loading을 가리지 않게 하기 
-		}
+	/// post request
+	/**
+	**	options = {
+	*		url = 요청 url
+	*		params = 전달할 파라미터 ({})
+	*		success = 성공시 호출할 콜백 함수
+	*		error = 에러시 호출할 콜백 함수
+	*		noLoading = true
+	*			-> true 설정시, Loading 없이 호출
+	*		keepLoading = true 
+	*			-> 여러번 비동기로 호출 시 앞서 호출한 요청이 Loading을 가리지 않게 하기 
+	*	}
 	*/
     const post = function(options) {
 		let url = "";

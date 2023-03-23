@@ -16,6 +16,8 @@ const mdTheme = createTheme();
 function DefaultLayout() {
   const [open, setOpen] = useState(false);
   const outlet = useOutlet();
+  
+  const drawerWidth = 240;
 
   const toggleDrawer = () => {
     setOpen(!open);
@@ -25,8 +27,8 @@ function DefaultLayout() {
     <ThemeProvider theme={mdTheme}>
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
-        <Header open={open} toggleDrawer={toggleDrawer}></Header>
-        <Sidebar open={open} toggleDrawer={toggleDrawer}></Sidebar>
+        <Header></Header>
+        <Sidebar open={open} drawerWidth={drawerWidth} toggleDrawer={toggleDrawer}></Sidebar>
         <Box
           component="main"
           sx={{
@@ -40,7 +42,7 @@ function DefaultLayout() {
           }}
         >
           <Toolbar />
-          <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+          <Container  sx={{ mt: 4, mb: 4 }}>
             {outlet}
             <Footer></Footer>
           </Container>

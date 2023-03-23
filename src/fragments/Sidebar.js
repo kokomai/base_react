@@ -20,7 +20,7 @@ import { Assignment,
     Logout
  } from '@mui/icons-material';
 
-function Sidebar({open, toggleDrawer}) {
+function Sidebar({open, toggleDrawer, drawerWidth}) {
         const linkList = [
             {link: '/', text : '홈', icon: <Home></Home>},
             {link: '/about', text : 'about', icon: <Assignment></Assignment> },
@@ -37,8 +37,17 @@ function Sidebar({open, toggleDrawer}) {
 
         return (
         <Drawer 
-            anchor={'right'}
-            open={open}>
+            // open={open}
+            variant="permanent"
+            sx={{
+                width: drawerWidth,
+                flexShrink: 0,
+                '& .MuiDrawer-paper': {
+                    width: drawerWidth,
+                    boxSizing: 'border-box',
+                },
+            }}
+            >
             <Toolbar
                 sx={{
                 display: 'flex',
@@ -46,10 +55,12 @@ function Sidebar({open, toggleDrawer}) {
                 justifyContent: 'flex-end',
                 px: [1],
                 }}
+                
+                
             >
-                <IconButton onClick={toggleDrawer}>
+                {/* <IconButton onClick={toggleDrawer}>
                     <ChevronRightIcon />
-                </IconButton>
+                </IconButton> */}
                 
             </Toolbar>
             <Divider />
@@ -71,7 +82,7 @@ function Sidebar({open, toggleDrawer}) {
                 </List>
                 <Divider />
             </Box>
-            <Box sx={{position: 'absolute', bottom:"0px"}}>
+            {/* <Box sx={{position: 'absolute', bottom:"0px"}}>
                 <List>
                     <ListItem key={'logout'} disablePadding>
                         <ListItemButton>
@@ -82,7 +93,7 @@ function Sidebar({open, toggleDrawer}) {
                         </ListItemButton>
                     </ListItem>
                 </List>
-            </Box>
+            </Box> */}
         </Drawer>
     );
 }

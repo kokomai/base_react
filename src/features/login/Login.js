@@ -31,7 +31,7 @@ export function Login() {
         success: function(data) {
           req.setRToken(data.rtoken);
           req.setAToken(data.atoken);
-          dispatch(setName(data.username))
+          dispatch(setName(data.userName))
 
           let moveTo = sessionStorage.getItem('afterLogin');
 
