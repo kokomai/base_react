@@ -36,13 +36,14 @@ export default function useReq() {
 	}
 
 	const setSessionCheck = function() {
-		const sessionInterval = setInterval(()=> {
+		clearInterval(window["sessionInterval"]);
+		window["sessionInterval"] = setInterval(()=> {
 			let nowCount = getSessionTime();
 			if(nowCount <= alertTime) {
 				if(nowCount <= 0) {
 					// 완전 만료시 로그아웃
 					dispatch(hideTimeoutAlert());
-					clearInterval(sessionInterval);
+					clearInterval(window["sessionInterval"]);
 					window.location.href = '/login';
 				} else {
 					// toggle 형식으로 타임아웃 안내 보여주기.
@@ -193,7 +194,10 @@ export default function useReq() {
 				},
 			}
 		).then((res) => {
-			setAToken(res.headers.get("X-AUTH-ATOKEN"));
+			if(res.headers.get("X-AUTH-ATOKEN")) {
+				setAToken(res.headers.get("X-AUTH-ATOKEN"));
+			}
+
 			if(!res.ok) {
 				isSuccess = false;
 			}
@@ -207,6 +211,7 @@ export default function useReq() {
 			if(isSuccess) {
 				// 세션 시간 초기화
 				setSessionTime();
+				setSessionCheck();
 				successF(data);
 			} else {
 				if(!url.includes('login')) {
@@ -308,7 +313,10 @@ export default function useReq() {
 				body: JSON.stringify(params)
 			}
 		).then((res) => {
-			setAToken(res.headers.get("X-AUTH-ATOKEN"));
+			if(res.headers.get("X-AUTH-ATOKEN")) {
+				setAToken(res.headers.get("X-AUTH-ATOKEN"));
+			}
+			
 			if(!res.ok) {
 				isSuccess = false;
 			}
@@ -322,6 +330,7 @@ export default function useReq() {
 			if(isSuccess) {
 				// 세션 시간 초기화
 				setSessionTime();
+				setSessionCheck();
 				successF(data);
 			} else {
 				if(!url.includes('login')) {
