@@ -3,7 +3,7 @@
  */
 
 import { useDispatch } from "react-redux";
-import { showAlert, showConfirm, setText, setTitle, setAlertBtnText, setConfirmBtnText, setCancelBtnText, setOnCancel, setOnConfirm} from "../fragments/popup/popupSlice";
+import { showAlert, showConfirm, setText, setTitle, setAlertBtnText, setConfirmBtnText, setCancelBtnText, setOnCancel, setOnConfirm, hideAlert, hideConfirm} from "../fragments/popup/popupSlice";
 
 export default function usePopup() {
 	const dispatch = useDispatch();
@@ -16,6 +16,12 @@ export default function usePopup() {
 	*	}
 	*/
 	const alert = (options) => {
+        dispatch(setAlertBtnText(""));
+        dispatch(setText(""));
+        dispatch(setTitle(""));
+        dispatch(setOnConfirm(function() {}));
+        dispatch(setOnCancel(function() {}));
+
         if (!options.title) {
             dispatch(setTitle("안내"));
         } else {
@@ -49,6 +55,13 @@ export default function usePopup() {
 	*	}
 	*/
 	const confirm = (options) => {
+        dispatch(setConfirmBtnText(""));
+        dispatch(setConfirmBtnText(""));
+        dispatch(setText(""));
+        dispatch(setTitle(""));
+        dispatch(setOnConfirm(function() {}));
+        dispatch(setOnCancel(function() {}));
+
         if (!options.title) {
             dispatch(setTitle("확인"));
         } else {
