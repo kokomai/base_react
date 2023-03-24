@@ -19,14 +19,6 @@ import useReq from '../app/request';
 function Header() {
     const userName = useSelector(selectUser).name;
     const req = useReq();
-    const nav = useNavigate();
-
-    const logout = () => {
-        req.delAToken();
-        req.delRToken();
-        
-        nav("/login");
-    }
 
     return (
         <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
@@ -37,7 +29,7 @@ function Header() {
                     noWrap
                     sx={{ flexGrow: 1 }}
                 >
-                    대시보드
+                    BMW AAS
                 </Typography>
                 <Avatar alt={userName}/>
                 <Typography
@@ -52,7 +44,7 @@ function Header() {
                     edge="start"
                     color="inherit"
                     aria-label="open drawer"
-                    onClick={logout}
+                    onClick={()=>{ req.logout();}}
                     sx={{marginLeft:'1%'}}
                 >
                     <Typography
