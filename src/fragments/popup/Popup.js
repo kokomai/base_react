@@ -7,43 +7,28 @@ import { hideAlert, hideConfirm, selectPopup, setAlertBtnText, setOnCancel, setO
 export default  function Popup() {
     const popup = useSelector(selectPopup);
     const dispatch = useDispatch();
+    const timeOut = 200;
 
     const alertHide = () => {
-        new Promise(()=> {
-            dispatch(hideAlert());
+        dispatch(hideAlert());
+        setTimeout(()=> {
             popup.onConfirm();
-            dispatch(setOnConfirm(function() {}));
-        }).then(()=> {
-            dispatch(setAlertBtnText(""));
-            dispatch(setText(""));
-            dispatch(setTitle(""));
-        })
+        }, timeOut);
+        
     }
 
     const confirmCancel = () => {
-        new Promise(()=> {
-            dispatch(hideConfirm());
+        dispatch(hideConfirm());
+        setTimeout(()=> {
             popup.onCancel();
-            dispatch(setOnConfirm(function() {}));
-            dispatch(setOnCancel(function() {}));
-        }).then(()=> {
-            dispatch(setAlertBtnText(""));
-            dispatch(setText(""));
-            dispatch(setTitle(""));
-        })
+        }, timeOut);
     }
 
     const confirmAgree = () => {
-        new Promise(()=> {
-            dispatch(hideConfirm());
+        dispatch(hideConfirm());
+        setTimeout(()=> {
             popup.onConfirm();
-            dispatch(setOnConfirm(function() {}));
-            dispatch(setOnCancel(function() {}));
-        }).then(()=> {
-            dispatch(setAlertBtnText(""));
-            dispatch(setText(""));
-            dispatch(setTitle(""));
-        })
+        }, timeOut);
     }
 
     return (
