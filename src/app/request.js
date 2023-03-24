@@ -17,13 +17,13 @@ export default function useReq() {
 	 *  동작이 없을 시 로그아웃 안내를 위해..
 	 */
 	const sessionTime = 1000 * 60 * 30; // 일단 30분
-	// const sessionTime = 1000 * 60 * 10; // 일단 10분
+	// const sessionTime = 1000 * 15 * 1; // 일단 15초
 
 	/**
 	 *  세션 시간이 만료됨을 알려주는 시간
 	 */
 	const alertTime = 1000 * 60 *  1 // 일단 1분
-	// const alertTime = 1000 * 60 * 1 // 일단 1분
+	// const alertTime = 1000 * 10 * 1 // 일단 10초
 	
 	/// 세션 / 토큰 유효시간 가져오기
 	const getSessionTime = function() {
@@ -42,9 +42,8 @@ export default function useReq() {
 			if(nowCount <= alertTime) {
 				if(nowCount <= 0) {
 					// 완전 만료시 로그아웃
-					dispatch(hideTimeoutAlert());
-					clearInterval(window["sessionInterval"]);
-					window.location.href = '/login';
+					logout();
+					return;
 				} else {
 					// toggle 형식으로 타임아웃 안내 보여주기.
 					// 해당 안내 컴포넌트는 App.js에 정의
@@ -376,9 +375,11 @@ export default function useReq() {
 	const logout = () => {
 		delAToken();
 		delRToken();
-
 		dispatch(setId(''));
 		dispatch(setName(''));
+        sessionStorage.removeItem("f-sessionTime");
+		clearInterval(window["sessionInterval"]);
+		dispatch(hideTimeoutAlert());
 		window.location.href = '/login';
 	}
 
