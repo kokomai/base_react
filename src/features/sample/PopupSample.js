@@ -6,13 +6,27 @@ import { COMM } from "../../app/common";
 import usePopup from "../../app/popup";
 
 export default function PopupSample() {
+  /**
+   *  input에 입력된 값을 alert, confirm에 사용하려고 선언한 것입니다.
+   *  단순히 alert, confirm을 호출하실 떄에는 문자열만 사용하셔도 무방합니다.
+   */
   const [alertTitle, setAlertTitle] = React.useState("테스트");
   const [alertText, setAlertText] = React.useState("테스트입니다");
   const [confirmTitle, setConfirmTitle] = React.useState("테스트 컨펌");
   const [confirmText, setConfirmText] = React.useState("테스트 컨펌 입니다..");
   const nav = useNavigate();
+
+  /**
+   * 공용 alert, confirm을 함수형태로 사용하기 위해서는
+   * usePop이란 custom hook을 선언 및 초기화 해야합니다.
+   *  */ 
   const pop = usePopup();
 
+
+  /**
+   * alert에서 확인 버튼 누를 시 실행될 함수입니다.
+   * 간단한 로직일 경우 익명함수(function(){}, ()=>{})를 사용하셔도 무방합니다.
+   */
   function alertConfirm() {
     alert("알럿 확인입니다. 확인 클릭시 실행");
   }
@@ -27,10 +41,24 @@ export default function PopupSample() {
     pop.alert({title: alertTitle, text: alertText, btn: '확인입니다.', onConfirm: alertConfirm});
   }
 
+  const alertTest2 = ()=> {
+      pop.alert({title: alertTitle, text: alertText, btn: '두번째 띄우기', onConfirm: function() {
+        pop.alert({title: alertTitle+"2", text: alertText+"2", btn: '확인입니다.', onConfirm: alertConfirm});
+      }});
+  }
+
+  /**
+   * confirm에서 확인 버튼 누를 시 실행될 함수입니다.
+   * 간단한 로직일 경우 익명함수(function(){}, ()=>{})를 사용하셔도 무방합니다.
+   */
   function confirmAgree() {
     alert("컨펌 확인입니다. 확인 클릭시 실행");
   }
 
+  /**
+   * confirm에서 취소 버튼 누를 시 실행될 함수입니다.
+   * 간단한 로직일 경우 익명함수(function(){}, ()=>{})를 사용하셔도 무방합니다.
+   */
   function confirmCancel() {
     alert("컨펌 취소입니다. 취소 클릭시 실행");
   }
@@ -78,6 +106,7 @@ export default function PopupSample() {
       </Box>
       
       <Button variant="contained" color="primary" sx={{margin:"1%"}} onClick={()=>{alertTest();}}>공용 Alert</Button>
+      <Button variant="contained" color="primary" sx={{margin:"1%"}} onClick={()=>{alertTest2();}}>공용 Alert 여러번 띄우기</Button>
       <hr></hr>
       <Box sx={{ width: '30%', margin: "1%"}}>
         <TextField
