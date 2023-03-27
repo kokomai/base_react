@@ -1,9 +1,53 @@
 import { ConstructionOutlined } from "@mui/icons-material";
-import { Box, Button, TextField, Typography } from "@mui/material";
+import { Backdrop, Box, Button, Card, CardActions, CardContent, IconButton, TextField, Typography } from "@mui/material";
+import { Stack } from "@mui/system";
 import * as React from 'react';
 import { useNavigate } from 'react-router';
 import { COMM } from "../../app/common";
 import usePopup from "../../app/popup";
+import CloseIcon from '@mui/icons-material/Close';
+import Mypage from "../mypage/Mypage";
+
+function CustomPopup({isShow, setIsShow}) {
+
+  return (
+    <>
+      <Backdrop
+            sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+            open={isShow}
+        >
+            <Card sx={{ minWidth: "50%", minHeight: "60%"}}>
+                <Stack direction="row" spacing={1}>
+                    <IconButton
+                      aria-label="close"
+                      color="inherit"
+                      size="small"
+                      onClick={() => {
+                        setIsShow(false);
+                      }}
+                      sx={{marginLeft: 'auto'}}
+                    >
+                      <CloseIcon fontSize="inherit" />
+                    </IconButton>
+                </Stack>
+                <CardContent>
+                    <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                      놀랍게도
+                    </Typography>
+                    <Typography variant="body2">
+                      아래와 같이 페이지 자체를 컴포넌트 처럼 넣을 수 있습니다.
+                      현재는 Mypage를 넣어보았습니다.
+                    </Typography>
+                    <hr></hr>
+                    {/* 마이페이지를 그대로 넣을 수도 있습니다 컴포넌트 처럼.. */}
+                    <Mypage></Mypage>
+                    
+                </CardContent>
+            </Card>
+        </Backdrop>
+    </>
+  )
+}
 
 export default function PopupSample() {
   /**
@@ -14,6 +58,7 @@ export default function PopupSample() {
   const [alertText, setAlertText] = React.useState("테스트입니다");
   const [confirmTitle, setConfirmTitle] = React.useState("테스트 컨펌");
   const [confirmText, setConfirmText] = React.useState("테스트 컨펌 입니다..");
+  const [isPopShow, setIsPopShow] = React.useState(false);
   const nav = useNavigate();
 
   /**
@@ -128,6 +173,9 @@ export default function PopupSample() {
       </Box>
       
       <Button variant="contained" color="primary" sx={{margin:"1%"}} onClick={()=>{confirmTest();}}>공용 Confirm</Button>
+      <hr></hr>
+      <CustomPopup isShow={isPopShow} setIsShow={setIsPopShow}></CustomPopup>
+      <Button variant="contained" color="primary" sx={{margin:"1%"}} onClick={()=>{setIsPopShow(true);}}>커스텀 팝업 호출</Button>
       <hr></hr>
       <hr></hr>
       <Button variant="contained" color="secondary" onClick={()=>{nav("/sample")}}>Sample 홈으로..</Button>
