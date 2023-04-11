@@ -1,8 +1,9 @@
-import { Box, Button, Checkbox, FormControl, InputLabel, MenuItem, Paper, Select, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel, TextField, Typography } from "@mui/material";
+import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Checkbox, FormControl, InputLabel, MenuItem, Paper, Select, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel, TextField, Typography } from "@mui/material";
 import { visuallyHidden } from "@mui/utils";
 import * as React from 'react';
 import { useNavigate } from 'react-router';
 import useReq from '../../app/request';
+import { FilterList } from "@mui/icons-material"
 
 /**
  *  참고 URL :
@@ -115,7 +116,6 @@ export default function TableSample() {
       success: function(data) {
         setRows(data.list);
         setAllItemCount(data.allItemCount);
-        console.log(rows);
       }
     });
   }
@@ -207,6 +207,20 @@ export default function TableSample() {
           </Typography>
         </Box>
         <TableContainer>
+          <Accordion>
+            <AccordionSummary
+              expandIcon={<FilterList />}
+              aria-controls="panel1a-content"
+              id="panel1a-header"
+            >
+              <Typography></Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Typography>
+                필터 영역입니다.
+              </Typography>
+            </AccordionDetails>
+          </Accordion>
           <Table
             sx={{ minWidth: 750 }}
             aria-labelledby="tableTitle"

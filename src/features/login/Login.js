@@ -7,6 +7,7 @@ import useReq from '../../app/request';
 import { Button, Checkbox, FormControlLabel, Grid, Link, TextField, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import { useNavigate } from 'react-router';
+import LANG from '../../app/language'
 
 
 export function Login() {
@@ -20,7 +21,7 @@ export function Login() {
   let TryLogin = () => {
 
     if(id === '' || pw === '') {
-      alert("필수값을 채워주세요");
+      alert(LANG.get("l005"));
       return;
     }
 
@@ -38,7 +39,6 @@ export function Login() {
           req.setSessionCheck();
 
           if(moveTo && moveTo !== "") {
-            console.log(moveTo);
             nav(moveTo);
           } else {
             nav("/");
@@ -46,7 +46,7 @@ export function Login() {
         },
         error: function(err) {
           if(err.httpStatus === 403) {
-            alert("아이디 혹은 비밀번호를 확인해 주세요!");
+            alert(LANG.get("l006"));
             // focus id
             idInput.current.focus();
           } else {
@@ -60,7 +60,7 @@ export function Login() {
   return (
     <>
       <Typography component="h1" variant="h5">
-          로그인
+        {LANG.get("l001")}
       </Typography>
       
         <Box sx={{ mt: 1 }}>
@@ -69,7 +69,7 @@ export function Login() {
             margin="normal"
             required
             fullWidth
-            label="아이디"
+            label={LANG.get("l002")}
             defaultValue={id}
             onChange={(e)=>{setId(e.target.value)}}
             autoFocus
@@ -78,7 +78,7 @@ export function Login() {
             margin="normal"
             required
             fullWidth
-            label="비밀번호"
+            label={LANG.get("l003")}
             type="password"
             defaultValue={pw}
             onChange={(e)=>{setPw(e.target.value)}}
@@ -87,10 +87,10 @@ export function Login() {
             control={<Checkbox 
               value="remember" 
               color="primary" 
-              onChange={(e)=>{ if(e.target.checked) alert('개인 PC에서만 체크해주세요.'); }}
+              onChange={(e)=>{ if(e.target.checked) alert(LANG.get("l007"))}}
               />
             }
-            label="자동로그인"
+            label={LANG.get("l004")}
           />
           <Button
             type="button"
@@ -99,20 +99,8 @@ export function Login() {
             sx={{ mt: 3, mb: 2 }}
             onClick={TryLogin}
           >
-            로그인
+            {LANG.get("l001")}
           </Button>
-          <Grid container>
-            <Grid item xs>
-              <Link href="#" variant="body2">
-                비밀번호를 잊으셨습니까?
-              </Link>
-            </Grid>
-            <Grid item>
-              <Link href="#" variant="body2">
-                회원가입하기
-              </Link>
-            </Grid>
-          </Grid>
         </Box>
     </>
   );

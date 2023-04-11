@@ -1,6 +1,5 @@
 import { Component } from "react";
 
-
 class ErrorBoundary extends Component {
     constructor(props) {
         super(props);
@@ -8,15 +7,28 @@ class ErrorBoundary extends Component {
     }
 
     static getDerivedStateFromError(error) {
+        console.log(error);
         return { hasError: true };
     }
 
     componentDidCatch(error, errorInfo) {
         let errorLocation = errorInfo.componentStack.toString().split('(')[0].replace('\n', '').replace('   at ', '')
-        // sending error        
-        // sendError(errorLocation, error.message);
-        console.log(errorLocation);
-        console.log(error);
+        if(window.location.host.includes('localhost')) {
+            // 로컬이 아닐 경우 에러 수집을 위해 전송
+            fetch(
+                "/api/error/insert",
+                {
+                    method: 'POST',
+                    headers: {
+						"Content-type" : "application/json",
+					},
+                    body: JSON.stringify({'location' : errorLocation, 'errorText' : error.message})
+                }
+            );
+		} else {
+			console.log("errorLocaton : " + errorLocation);
+			console.log("errorMsg : " + error.message);
+		}
     }
 
     render() {

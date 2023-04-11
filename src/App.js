@@ -12,10 +12,12 @@ import { Sample } from './features/sample/Sample';
 import TableSample from './features/sample/TableSample';
 import DefaultLayout from './fragments/layout/DefaultLayout';
 import LoginLayout from './fragments/layout/LoginLayout';
+import TabLayout from './fragments/layout/TabLayout';
 import Loading from './fragments/loading/Loading';
 import NeedAuthPages from './fragments/NeedAuthPages';
 import Popup from './fragments/popup/Popup';
 import TimeoutAlert from './fragments/timeoutAlert/TimeoutAlert';
+import { FileSample } from './features/sample/fileSample';
 
 
 /* 
@@ -47,6 +49,20 @@ import TimeoutAlert from './fragments/timeoutAlert/TimeoutAlert';
 
 
 function App() {
+
+  const setLang = ()=> {
+    /**
+     *  google admin console에서 정의한 language 코드를 그대로 사용합니다.
+     *  https://developers.google.com/admin-sdk/directory/v1/languages?hl=en
+     *  한국인 경우 ko, 영어인 경우 en 입니다.
+     */
+    if(!localStorage.getItem("Flang")) {
+      localStorage.setItem("Flang", navigator.language.substring(0, 2));
+    }
+  }
+
+  setLang();
+
   return (
     <>
     <ErrorBoundary>
@@ -62,13 +78,20 @@ function App() {
           </Route>
           
           <Route path="/" element={<Main/>}></Route>
+          <Route path="/about" element={<About/>}></Route>
           <Route path="/sample" element={<Sample/>}></Route>
           <Route path="/tableSample" element={<TableSample/>}></Route>
           <Route path="/popupSample" element={<PopupSample/>}></Route>
-          <Route path="/about" element={<About/>}></Route>
+          <Route path="/fileSample" element={<FileSample/>}></Route>
         </Route>
         <Route element={<LoginLayout/>}>
           <Route path="/login" element={<Login/>}></Route>
+        </Route>
+        <Route element={<TabLayout/>}>
+          <Route path="/tabSample" element={<Sample/>}></Route>
+          <Route path="/tabTableSample" element={<TableSample/>}></Route>
+          <Route path="/tabPopupSample" element={<PopupSample/>}></Route>
+          <Route path="/tabFileSample" element={<FileSample/>}></Route>
         </Route>
         </Routes>
       </BrowserRouter>

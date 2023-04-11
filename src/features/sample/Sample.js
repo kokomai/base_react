@@ -9,9 +9,6 @@ import ValidInput from '../../components/input/ValidInput';
 export function Sample() {
   const [num, setNum] = useState('5');
   const [kor, setKor] = useState('5');
-  const [rows, setRows] = useState(10);
-  const [columns, setColumns] = useState(3);
-  const [pageSize, setPageSize] = useState(10);
   const nav = useNavigate();
 
   // 공통 호출 함수인 req를 아래와 같이 선언해줍니다.
@@ -102,8 +99,9 @@ export function Sample() {
       <hr></hr>
       <button onClick={onclick}>API 호출 테스트 JS파일 내 주석 확인 요망</button>
       <hr></hr>
-      {/* <Button variant="contained" color="primary" onClick={()=>{nav('/tableSample')}}>Table 샘플 페이지로</Button> */}
+      <Button variant="contained" color="primary" onClick={()=>{nav('/tableSample')}}>Table 샘플 페이지로</Button>
       <Button variant="contained" color="secondary" onClick={()=>{nav('/popupSample')}} sx={{margin:"3px"}}>popup 샘플 페이지로</Button>
+      <Button variant="contained" color="warning" onClick={()=>{nav('/fileSample')}} sx={{margin:"3px"}}>파일 업로드 페이지로</Button>
     </div>
   );
 }

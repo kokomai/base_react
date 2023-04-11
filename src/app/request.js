@@ -4,7 +4,7 @@
 
 import { useDispatch } from "react-redux";
 import { setId, setName } from "../features/login/userSlice";
-import { show, hide } from "../fragments/loading/loadingSlice";
+import { hide, show } from "../fragments/loading/loadingSlice";
 import { hideTimeoutAlert, showTimeoutAlert } from "../fragments/timeoutAlert/timeoutSlice";
 
 export default function useReq() {
@@ -363,9 +363,158 @@ export default function useReq() {
 		});
     }
 
+	/// file request
+	/**
+	**	options = {
+	*		url = 요청 url
+	*		params = 전달할 파라미터 ({})
+	*		files = 전달할 파일 array 객체()
+	*		success = 성공시 호출할 콜백 함수
+	*		error = 에러시 호출할 콜백 함수
+	*		noLoading = true
+	*			-> true 설정시, Loading 없이 호출
+	*		keepLoading = true 
+	*			-> 여러번 비동기로 호출 시 앞서 호출한 요청이 Loading을 가리지 않게 하기 
+	*	}
+	*/
+    const file = function(options) {
+		let url = "";
+		let params = {};
+		let successF = function(res) {
+			console.log(res);
+		};
+		let errorF = function(res) {
+			console.error(res);
+		};
+		let isLoading = true;
+		let isHideLoading = true;
+		let files = [];
+		let formData = new FormData();
+
+		if(typeof options === "object") {
+			if(options.url) {
+				url = options.url
+			}
+			if(options.params) {
+				params = options.params
+			}
+			if(options.success) {
+				successF = function(data) {
+					try{
+						options.success(data);
+					} catch(e) {
+						sendError(url, e.message);
+					}
+				}
+			}
+			if(options.error) {
+				errorF = options.error
+			}
+			if(options.noLoading !== undefined || options.noLoading !== null) {
+				isLoading = !options.noLoading
+			}
+			if(options.keepLoading !== undefined || options.keepLoading !== null) {
+				isHideLoading = !options.keepLoading
+			}
+
+			if(options.files !== undefined || options.files !== null) {
+				if(!Array.isArray(files)){
+					// 파일 리스트 오브젝트 형태 그대로일 경우 Array로 변환
+					files = Array.from(options.files);
+				} else {
+					files = options.files;
+				}
+			}
+		}
+		
+		if(isLoading) {
+			dispatch(show());
+		}
+		
+		let isSuccess = true;
+
+		for (const file of files) {
+			formData.append('files', file, file.name);
+		}
+
+		formData.append('params', JSON.stringify(params));
+        
+		return fetch(
+			url,
+			{
+				method: 'POST',
+				headers: {
+					"X-AUTH-ATOKEN" : getAToken(),
+					"X-AUTH-RTOKEN" : getRToken()
+				},
+				body: formData
+			}
+		).then((res) => {
+			if(res.headers.get("X-AUTH-ATOKEN")) {
+				setAToken(res.headers.get("X-AUTH-ATOKEN"));
+			}
+			
+			if(!res.ok) {
+				isSuccess = false;
+			}
+			
+			if(res.headers.get("content-type") === 'application/json') {
+				return res.json();
+			} else  {
+				return res.text();
+			}
+		}).then(data => {
+			if(isSuccess) {
+				// 세션 시간 초기화
+				setSessionTime();
+				setSessionCheck();
+				successF(data);
+			} else {
+				if(!url.includes('login')) {
+					// don't recording error when login or login timeout
+					if(typeof data === 'object') {
+						sendError(url, data.message);
+					} else {
+						sendError(url, data);
+					}
+				}
+
+				errorF(data);
+			}
+				
+			if(isHideLoading) {
+				setTimeout(()=> {
+					dispatch(hide());
+				}, 100)
+			}
+		}).catch(err =>{
+			// console.error(err);
+			sendError(url, err);
+
+			errorF(err);
+
+			if(isHideLoading) {
+				setTimeout(()=> {
+					dispatch(hide());
+				}, 100)
+			}
+		});
+    }
+
+
 	const sendError = (errorLocation, errorMsg) => {
 		// sending error
-		if(!window.location.host.includes('localhost')) {
+		if(window.location.host.includes('localhost')) {
+			fetch(
+                "/api/error/insert",
+                {
+                    method: 'POST',
+					headers: {
+						"Content-type" : "application/json",
+					},
+                    body: JSON.stringify({'location' : errorLocation, 'errorText' : errorMsg})
+                }
+            );
 		} else {
 			console.log("errorLocaton : " + errorLocation);
 			console.log("errorMsg : " + errorMsg);
@@ -384,12 +533,12 @@ export default function useReq() {
 	}
 
 	return {
-		get:get, post:post,
+		get:get, post:post, file:file,
 		getAToken:getAToken, setAToken:setAToken, delAToken:delAToken, 
 		getRToken:getRToken, setRToken:setRToken, delRToken:delRToken,
 		sendError:sendError,
 		setSessionCheck: setSessionCheck, getSessionTime:getSessionTime, 
 		setSessionTime:setSessionTime, sessionTime:sessionTime, alertTime:alertTime,
-		logout:logout
+		logout:logout,
 	}
 }
