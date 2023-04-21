@@ -39,7 +39,7 @@ function Header() {
                     noWrap
                     sx={{ flexGrow: 1 }}
                 >
-                    BASE REACT "GITHUB-TEST"
+                    BASE REACT
                 </Typography>
                 <Avatar alt={userName}/>
                 <Typography
