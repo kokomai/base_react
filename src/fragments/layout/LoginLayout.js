@@ -28,7 +28,7 @@ function LoginLayout() {
                         noWrap
                         sx={{ flexGrow: 1 }}
                     >
-                        BMW AAS
+                        BASE REACT
                     </Typography>
                     <Divider orientation="vertical" flexItem  sx={{marginLeft:'3%'}}/>
                     <Select
