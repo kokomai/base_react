@@ -16,7 +16,7 @@ export default function About() {
         setList(data);
       }
     });
-  }, [])
+  }, [isCall])
 
   function insideClick(d) {
     alert("click! :: " + d);
@@ -33,7 +33,7 @@ export default function About() {
           </div>
         ))
       }
-      <button onClick={()=>{setIsCall(!isCall)}}> generate new one </button>
+      <button onClick={()=>{setIsCall(!isCall)}}> generate new list </button>
     </div>
   );
 }

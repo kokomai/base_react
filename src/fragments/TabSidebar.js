@@ -20,20 +20,25 @@ import { Assignment,
     Logout
  } from '@mui/icons-material';
  import LANG from '../app/language';
+import { selectTabs, add, setIndex } from './tabs/tabsSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
-function Sidebar({open, toggleDrawer, drawerWidth}) {
+function TableSidebar({open, toggleDrawer, drawerWidth}) {
         const linkList = [
-            {link: '/', text : LANG.get("m001"), icon: <Home></Home>},
-            {link: '/about', text : LANG.get("m002"), icon: <Assignment></Assignment> },
-            {link: '/mypage', text : LANG.get("m003"), icon: <AssignmentInd></AssignmentInd>},
-            {link: '/sample', text : LANG.get("m004"), icon: <QuizIcon></QuizIcon>},
-            {link: '/tabSample', text : "탭 구조 샘플", icon: <QuizIcon></QuizIcon>},
+            {link: '/tabSample', text : LANG.get("m004"), icon: <Home></Home>},
+            {link: '/tabTableSample', text : "탭 테이블 샘플", icon: <Assignment></Assignment> },
+            {link: '/tabPopupSample', text : "탭 팝업 샘플", icon: <AssignmentInd></AssignmentInd>},
+            {link: '/tabFileSample', text : "탭 파일 샘플", icon: <QuizIcon></QuizIcon>},
         ]
-        
+
+        const dispatch = useDispatch();
+
+        const tabs = useSelector(selectTabs);
         const nav = useNavigate();
 
-        const onMenuClick = (link) => {
-            nav(link);
+        const onMenuClick = (link, text) => {
+            dispatch(add({url: link, title: text, value: {"test123": "test1234"}}));
+            dispatch(setIndex(tabs.tabs.length));
             toggleDrawer();
         }
 
@@ -70,8 +75,16 @@ function Sidebar({open, toggleDrawer, drawerWidth}) {
                 role="presentation"
                 >
                 <List>
+                    <ListItem key="defaultHome" disablePadding onClick={()=>{nav("/")}}>
+                        <ListItemButton>
+                        <ListItemIcon>
+                        <Home></Home>
+                        </ListItemIcon>
+                        <ListItemText primary={"일반 홈으로"} />
+                        </ListItemButton>
+                    </ListItem>
                     {linkList.map((obj, index) => (
-                    <ListItem key={obj.link} disablePadding onClick={()=>{onMenuClick(obj.link);}}>
+                    <ListItem key={obj.link} disablePadding onClick={()=>{onMenuClick(obj.link, obj.text);}}>
                         <ListItemButton>
                         <ListItemIcon>
                             {obj.icon}
@@ -100,4 +113,4 @@ function Sidebar({open, toggleDrawer, drawerWidth}) {
     );
 }
 
-export default Sidebar;
+export default TableSidebar;

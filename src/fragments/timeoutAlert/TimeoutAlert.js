@@ -9,23 +9,24 @@ function TimeoutAlert() {
     const timeoutAlert = useSelector(selectTimeoutAlert);
     const dispatch = useDispatch();
     const req = useReq();
-    const [count, setCount] = useState(req.alertTime);
-
+    const [count, setCount] = useState(req.getSessionTime());
+    
     useEffect(()=> {
+        setCount(req.getSessionTime());
         if(timeoutAlert) {
             if(count > 0) {
                 setTimeout(()=> {
                     setCount(count - 1000);
                 }, 1000)
             } else {
-                setCount(req.alertTime);
+                setCount(req.getSessionTime());
             }
         }
-    },[timeoutAlert, count, req.alertTime])
+    },[timeoutAlert, count])
 
     const extention = () => {
-        req.setSessionTime();
         dispatch(hideTimeoutAlert());
+        req.setSessionTime();
     }
 
     return (
